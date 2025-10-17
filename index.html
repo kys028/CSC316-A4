@@ -320,7 +320,7 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 <script>
     (async function () {
-        const csvUrl = "weekly_gas_prices.csv";
+        const csvUrl = "data/weekly_gas_prices.csv";
         let allData = await d3.csv(csvUrl, d => ({
             date: new Date(d.date),
             fuel: d.fuel,
