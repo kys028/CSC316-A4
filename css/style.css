@@ -1,39 +1,226 @@
 body {
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    margin: 18px;
-    background: #0b0f14;
-    color: #e8eef7;
+    font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    background: #f9fafb;
+    color: #222;
+    margin: 0;
+    padding: 20px;
 }
-.wrap { max-width: 1100px; margin: auto; }
-h1 { font-size: 20px; margin: 0 0 8px; font-weight: 600; }
 
-.controls { display: flex; gap: 12px; align-items: center; margin: 8px 0 14px; flex-wrap: wrap; }
-.controls label { opacity: .8; }
-.hint { opacity: .7; font-size: 12px; }
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
 
-.box { background: #0e141b; border: 1px solid #243040; border-radius: 10px; padding: 10px 14px 14px; }
-svg { width: 100%; height: 620px; display: block; }
+h1 { margin-bottom: 0.3em; color: #222; }
+.subtitle { color: #555; margin-bottom: 1em; }
 
-.y.axis text { fill: #a9b8cc; font-size: 12px; }
-.y.axis line, .y.axis path { stroke: #2a3a50; }
-.legend { font-size: 12px; fill: #a9b8cc; }
-.fuelLabel { text-anchor: middle; font-size: 13px; fill: #a9b8cc; opacity: .9; }
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
 
-.balloon { cursor: grab; }
-.balloon:active { cursor: grabbing; }
+#heatmap, #linechart {
+    margin-top: 1.2em;
+}
 
 .tooltip {
     position: absolute;
+    background: rgba(0,0,0,0.75);
+    color: white;
+    padding: 6px 8px;
+    border-radius: 4px;
     pointer-events: none;
-    background: #101723;
-    color: #e8eef7;
-    border: 1px solid #2a3a50;
-    border-radius: 8px;
-    padding: 8px 10px;
     font-size: 12px;
-    box-shadow: 0 8px 20px rgba(0,0,0,.35);
-    opacity: 0;
-    transform: translate(-50%, -110%);
 }
 
-.info { font-size: 12px; opacity: 0.7; margin-top: 8px; }
+footer {
+    margin-top: 2em;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+}
+
+
+
+:root {
+    --bg: #f6f8fa;
+    --panel-bg: #ffffff;
+    --accent: #007acc;
+    --accent-light: #d0e8ff;
+    --border: #e3e6ea;
+    --text: #1f2328;
+    --muted: #6c757d;
+    --radius: 10px;
+    --shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+body {
+    font-family: "Inter", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 24px;
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* HEADER */
+h1 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: var(--accent);
+    margin-bottom: 0.4em;
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--muted);
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto 1.5em auto;
+    font-size: 0.95rem;
+}
+
+/* CONTROL PANEL */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    justify-content: center;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    padding: 12px 18px;
+    border-radius: var(--radius);
+    margin-bottom: 1.2em;
+    transition: background 0.3s ease;
+}
+
+.controls label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text);
+}
+
+.controls select,
+.controls input[type="range"],
+.controls button {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    background: #fff;
+    transition: all 0.25s ease;
+}
+
+.controls select:hover,
+.controls input[type="range"]:hover,
+.controls button:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.controls button {
+    cursor: pointer;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    font-weight: 600;
+}
+.controls button:hover {
+    background: #005ea8;
+}
+
+/* VISUALIZATION PANELS */
+#heatmap, #linechart {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    padding: 10px;
+    margin-top: 1.5em;
+    transition: transform 0.3s ease;
+}
+
+#heatmap:hover, #linechart:hover {
+    transform: scale(1.01);
+}
+
+#legend {
+    margin-top: 0.5em;
+    text-align: center;
+}
+
+/* TOOLTIP */
+.tooltip {
+    position: absolute;
+    background: rgba(0,0,0,0.8);
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 5px;
+    pointer-events: none;
+    font-size: 13px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: opacity 0.2s ease;
+}
+
+/* FOOTER */
+footer {
+    margin-top: 2em;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+}
+footer a {
+    color: var(--accent);
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+/* Dark mode */
+
+.theme-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+.theme-btn:hover { background: #005ea8; }
+
+/* Dark theme variables */
+body.dark {
+    --bg: #0b1119;
+    --panel-bg: #141c27;
+    --border: #2d3748;
+    --text: #e2e8f0;
+    --muted: #a0aec0;
+    --accent: #4dabf7;
+}
+
+
+
+
+

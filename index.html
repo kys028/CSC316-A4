@@ -1,52 +1,54 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Fuel Price Balloons</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Interactive D3 visualization of fuel prices as draggable balloons." />
-    <link rel="stylesheet" href="css/styles.css">
+    <meta charset="utf-8">
+    <title>U.S. Weekly Gas Prices Explorer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
+
 <body>
-<header class="wrap">
-    <h1>"Good-grade" fuel as balloons — higher price floats higher</h1>
-</header>
+<div class="container">
+    <h1> Weekly Gas Price Explorer (1990–2025)</h1>
+    <p class="subtitle">
+        Explore weekly U.S. gasoline and diesel prices by fuel grade and time. Hover for details, filter dynamically, and click a year to zoom into its weekly trend.
+    </p>
 
-<main class="wrap" id="app" aria-live="polite">
-    <section class="controls" aria-label="Filters">
-        <label for="gradeSelect">Good grade:</label>
-        <select id="gradeSelect" name="grade">
-            <option value="premium|ultra_low_sulfur" selected>premium (gasoline) + ultra_low_sulfur (diesel)</option>
-            <option value="midgrade|ultra_low_sulfur">midgrade (gasoline) + ultra_low_sulfur (diesel)</option>
-            <option value="regular|ultra_low_sulfur">regular (gasoline) + ultra_low_sulfur (diesel)</option>
-            <option value="premium|low_sulfur">premium (gasoline) + low_sulfur (diesel)</option>
-            <option value="all|all">Show all grades</option>
-        </select>
+    <div class="controls">
+        <label>Fuel Type:</label>
+        <select id="fuelSelect"></select>
 
-        <label for="formulationSelect">Formulation:</label>
-        <select id="formulationSelect" name="formulation">
-            <option value="any" selected>any</option>
-            <option value="all">all</option>
-            <option value="conventional">conventional</option>
-            <option value="reformulated">reformulated</option>
-        </select>
+        <label>Grade:</label>
+        <select id="gradeSelect"></select>
 
-        <span class="hint">(Drag balloons; hover for details.)</span>
-    </section>
+        <label>Year Range:</label>
+        <input type="range" id="yearSlider" min="1990" max="2025" value="2025" step="1">
+        <span id="yearLabel">Up to 2025</span>
 
-    <section class="box" aria-label="Chart">
-        <svg id="chart" viewBox="0 0 1100 620" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="chartTitle chartDesc">
-            <title id="chartTitle">Fuel price balloons</title>
-            <desc id="chartDesc">Each circle represents a price observation; higher prices float higher. Drag to explore.</desc>
-        </svg>
-        <div class="info" id="dataInfo">Loading data...</div>
-    </section>
-</main>
+        <button id="resetBtn">Reset</button>
 
-<div class="tooltip" id="tip" aria-hidden="true"></div>
+        <button id="playBtn"> ▶ Play Timeline</button>
 
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
-<script defer src="js/main.js"></script>
+        <button id="themeToggle" class="theme-btn"> Dark Mode </button>
+
+
+    </div>
+
+    <div id="legend"></div>
+    <div id="heatmap"></div>
+    <div id="linechart"></div>
+
+    <footer>
+        <p>
+            Data:
+            <a href="https://github.com/rfordatascience/tidytuesday/tree/main/data/2025/2025-07-01" target="_blank">
+                TidyTuesday 2025-07-01
+            </a> | Visualization CSC316 Assignment 4
+        </p>
+    </footer>
+</div>
+
+<script src="js/main.js"></script>
 </body>
 </html>
