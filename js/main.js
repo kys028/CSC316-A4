@@ -46,10 +46,32 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     const y = d3.scaleBand().domain(years).range([0, height]).padding(0.05);
     const color = d3.scaleSequential(d3.interpolateYlOrRd);
 
+    // X-axis
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
         .call(d3.axisBottom(x).tickValues([1,13,26,39,52]));
-    svg.append("g").call(d3.axisLeft(y).tickValues(years.filter(y=>y%5===0)));
+    
+    // X-axis label
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#333")
+        .attr("font-weight", "600")
+        .text("Week of Year");
+    
+    // Y-axis (show all years)
+    svg.append("g").call(d3.axisLeft(y));
+    
+    // Y-axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#333")
+        .attr("font-weight", "600")
+        .text("Year");
 
 
 
@@ -163,7 +185,27 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
         svgL.append("g")
             .attr("transform", `translate(0,200)`)
             .call(d3.axisBottom(xL).ticks(6));
+        
+        // X-axis label for line chart
+        svgL.append("text")
+            .attr("x", width / 2)
+            .attr("y", 240)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#333")
+            .attr("font-weight", "600")
+            .text("Date");
+        
         svgL.append("g").call(d3.axisLeft(yL));
+        
+        // Y-axis label for line chart
+        svgL.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -100)
+            .attr("y", -50)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#333")
+            .attr("font-weight", "600")
+            .text("Price ($)");
 
         const line = d3.line()
             .x(d => xL(d.date))
