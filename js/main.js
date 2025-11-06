@@ -193,14 +193,29 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
                 .attr("height", y.bandwidth())
                 .attr("fill", d => color(d.price))
                 .attr("opacity", 0)
+
                 .on("mouseover", (event, d) => {
-                    tooltip.transition().duration(150).style("opacity", 0.9);
-                    tooltip.html(`Year ${d.year}<br>Week ${d.week}<br>Price $${d.price.toFixed(2)}`)
-                        .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 28) + "px");
+                    // Update info panel instead of tooltip
+                    d3.select("#infoContent").html(`
+      <b>Year:</b> ${d.year}<br>
+      <b>Week:</b> ${d.week}<br>
+      <b>Fuel Type:</b> ${d.fuel.charAt(0).toUpperCase() + d.fuel.slice(1)}<br>
+      <b>Grade:</b> ${d.grade.replaceAll("_", " ")}<br>
+      <b>Average Price:</b> $${d.price.toFixed(2)}
+    `);
+
+                    d3.select(event.currentTarget)
+                        .transition().duration(150)
+                        .attr("stroke", "#000")
+                        .attr("stroke-width", 1.5);
                 })
-                .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0))
-                .on("click", (_, d) => {
+                .on("mouseout", (event) => {
+                    d3.select(event.currentTarget)
+                        .transition().duration(200)
+                        .attr("stroke-width", 0);
+                })
+
+    .on("click", (_, d) => {
                     drawLineChart(d.year);
                     document.querySelector("#linechart").scrollIntoView({ behavior: "smooth", block: "start" });
                 })

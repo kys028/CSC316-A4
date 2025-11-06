@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="title form updated + a insight box below the line chart to give more explanation">
+    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="US map as web background">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
@@ -93,7 +93,7 @@
       <workItem from="1761610005587" duration="6472000" />
       <workItem from="1762196677360" duration="120000" />
       <workItem from="1762305171734" duration="1817000" />
-      <workItem from="1762320545427" duration="19262000" />
+      <workItem from="1762320545427" duration="20528000" />
     </task>
     <task id="LOCAL-00001" summary="error fixed version1">
       <option name="closed" value="true" />
@@ -159,7 +159,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762399835256</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="US map as web background">
+      <option name="closed" value="true" />
+      <created>1762400698748</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1762400698748</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -172,6 +180,7 @@
     <MESSAGE value="updated timeline, divide choice of type and grade performance." />
     <MESSAGE value="updated reset button (everthing be default( Gasoline ,all)" />
     <MESSAGE value="title form updated + a insight box below the line chart to give more explanation" />
-    <option name="LAST_COMMIT_MESSAGE" value="title form updated + a insight box below the line chart to give more explanation" />
+    <MESSAGE value="US map as web background" />
+    <option name="LAST_COMMIT_MESSAGE" value="US map as web background" />
   </component>
 </project>
