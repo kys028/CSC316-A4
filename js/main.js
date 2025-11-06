@@ -51,7 +51,27 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
         .call(d3.axisBottom(x).tickValues([1,13,26,39,52]));
     svg.append("g").call(d3.axisLeft(y).tickValues(years.filter(y=>y%5===0)));
 
+    // X-axis label
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", height + 40)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#333")
+        .attr("font-weight", "600")
+        .text("Week of Year");
 
+    // Y-axis (show all years)
+    svg.append("g").call(d3.axisLeft(y));
+
+    // Y-axis label
+    svg.append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("x", -height / 2)
+        .attr("y", -50)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#333")
+        .attr("font-weight", "600")
+        .text("Year");
 
 
 
@@ -84,7 +104,10 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
                         .style("top", (event.pageY - 28) + "px");
                 })
                 .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0))
-                .on("click", (_, d) => drawLineChart(d.year))
+                .on("click", (_, d) => {
+                    drawLineChart(d.year);
+                    document.querySelector("#linechart").scrollIntoView({ behavior: "smooth", block: "start" });
+                })
                 .transition()
                 .duration(800)
                 .attr("opacity", 1),
@@ -139,12 +162,12 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             d3.rollup(
                 subset,
                 v => d3.mean(v, d => d.price),
-                d => d3.timeWeek.floor(d.date) // group by week start
+                d => d3.timeWeek.floor(d.date)
             ),
             ([date, avgPrice]) => ({ date, price: avgPrice })
         ).sort((a, b) => d3.ascending(a.date, b.date));
 
-
+        // Clear and setup new chart
         d3.select("#linechart").html("");
         const svgL = d3.select("#linechart")
             .append("svg")
@@ -153,22 +176,40 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             .append("g")
             .attr("transform", `translate(${margin.left},50)`);
 
-        const xL = d3.scaleTime()
+        let xL = d3.scaleTime()
             .domain(d3.extent(weekAgg, d => d.date))
             .range([0, width]);
-        const yL = d3.scaleLinear()
+        let yL = d3.scaleLinear()
             .domain(d3.extent(weekAgg, d => d.price)).nice()
             .range([200, 0]);
 
-        svgL.append("g")
+        const xAxis = svgL.append("g")
             .attr("transform", `translate(0,200)`)
             .call(d3.axisBottom(xL).ticks(6));
-        svgL.append("g").call(d3.axisLeft(yL));
+        const yAxis = svgL.append("g").call(d3.axisLeft(yL));
+
+        svgL.append("text")
+            .attr("x", width / 2)
+            .attr("y", 240)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#333")
+            .attr("font-weight", "600")
+            .text("Date");
+
+        svgL.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("x", -100)
+            .attr("y", -50)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#333")
+            .attr("font-weight", "600")
+            .text("Price ($)");
 
         const line = d3.line()
             .x(d => xL(d.date))
             .y(d => yL(d.price));
 
+        // main price line
         const path = svgL.append("path")
             .datum(weekAgg)
             .attr("fill", "none")
@@ -176,36 +217,52 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             .attr("stroke-width", 2)
             .attr("d", line);
 
+        const movingAvg = weekAgg.map((d, i, arr) => {
+            const window = arr.slice(Math.max(0, i - 3), i + 1);
+            return {
+                date: d.date,
+                price: d3.mean(window, v => v.price)
+            };
+        });
+        svgL.append("path")
+            .datum(movingAvg)
+            .attr("fill", "none")
+            .attr("stroke", "#ff8800")
+            .attr("stroke-width", 1.8)
+            .attr("stroke-dasharray", "5 3")
+            .attr("opacity", 0.9)
+            .attr("d", line);
+
+//Summary statistics text
+        const avg = d3.mean(weekAgg, d => d.price);
+        const change = weekAgg.length > 1
+            ? weekAgg[weekAgg.length - 1].price - weekAgg[0].price
+            : 0;
+        const vol = d3.deviation(weekAgg, d => d.price);
+
+        d3.select("#linechart")
+            .append("div")
+            .attr("class", "summary")
+            .html(
+                `<b>${selectedYear}</b> — 
+       Avg: <span style="color:#007acc">$${avg.toFixed(2)}</span>,
+       Change: <span style="color:${change>=0?"#28a745":"#dc3545"}">
+       ${change>=0?"+":""}${change.toFixed(2)}</span>,
+       Volatility: <span style="color:#ff8800">${vol.toFixed(2)}</span>`
+            )
+            .style("font-family", "Inter, sans-serif")
+            .style("margin-top", "4px")
+            .style("text-align", "center")
+            .style("font-size", "0.9rem")
+            .style("color", "var(--text)");
+
         const totalLength = path.node().getTotalLength();
-        path
-            .attr("stroke-dasharray", totalLength + " " + totalLength)
+        path.attr("stroke-dasharray", totalLength + " " + totalLength)
             .attr("stroke-dashoffset", totalLength)
             .transition()
             .duration(1200)
             .ease(d3.easeLinear)
             .attr("stroke-dashoffset", 0);
-
-        svgL.append("text")
-            .attr("x", 10)
-            .attr("y", -15)
-            .text(`${selectedYear} — ${currentFuel} (${currentGrade})`)
-            .attr("fill", "#333")
-            .attr("font-weight", "600");
-
-
-
-
-        // brushing:
-        const brush = d3.brushX()
-            .extent([[0,0],[width,200]]) // brush area size
-            .on("end", ({selection}) => {
-                if (selection) {
-                    const [x0, x1] = selection.map(xL.invert);
-                    zoomToPeriod(x0, x1);
-                }
-            });
-        svgL.append("g").attr("class","brush").call(brush);
-
 
         svgL.selectAll("circle")
             .data(weekAgg)
@@ -217,22 +274,70 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             .on("mouseover", (event, d) => {
                 tooltip.transition().duration(200).style("opacity", 1);
                 tooltip.html(`${d3.timeFormat("%b %d")(d.date)}<br>$${d.price.toFixed(2)}`)
-                    .style("left", (event.pageX + 10)+"px")
-                    .style("top", (event.pageY - 28)+"px");
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 28) + "px");
             })
             .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0));
-    }
 
+        //zooming brush
+        const brush = d3.brushX()
+            .extent([[0, 0], [width, 200]])
+            .on("end", ({selection}) => {
+                if (!selection) return;
+                const [x0, x1] = selection.map(xL.invert);
+                zoomToPeriod(x0, x1);
+                svgL.select(".brush").call(brush.move, null); // clear brush
+            });
 
+        svgL.append("g").attr("class", "brush").call(brush);
 
+        function zoomToPeriod(start, end) {
+            const filtered = weekAgg.filter(d => d.date >= start && d.date <= end);
+            xL.domain([start, end]);
+            yL.domain(d3.extent(filtered, d => d.price)).nice();
 
-    // helper func for brushing :
-    function zoomToPeriod(start, end) {
-        const filtered = weekAgg.filter(d => d.date >= start && d.date <= end);
-        yL.domain(d3.extent(filtered, d => d.price));
-        svgL.selectAll("path").datum(filtered)
-            .transition().duration(800)
-            .attr("d", line);
+            // Update axes
+            xAxis.transition().duration(800).call(d3.axisBottom(xL).ticks(6));
+            yAxis.transition().duration(800).call(d3.axisLeft(yL));
+
+            // Update line
+            path.datum(filtered)
+                .transition()
+                .duration(800)
+                .attr("d", line);
+
+            // Update circles
+            svgL.selectAll("circle")
+                .data(filtered, d => d.date)
+                .join("circle")
+                .transition()
+                .duration(800)
+                .attr("cx", d => xL(d.date))
+                .attr("cy", d => yL(d.price));
+        }
+        function resetZoom() {
+            xL.domain(d3.extent(weekAgg, d => d.date));
+            yL.domain(d3.extent(weekAgg, d => d.price)).nice();
+
+            xAxis.transition().duration(800).call(d3.axisBottom(xL).ticks(6));
+            yAxis.transition().duration(800).call(d3.axisLeft(yL));
+
+            path.datum(weekAgg)
+                .transition().duration(800)
+                .attr("d", line);
+
+            svgL.selectAll("circle")
+                .data(weekAgg, d => d.date)
+                .join("circle")
+                .transition()
+                .duration(800)
+                .attr("cx", d => xL(d.date))
+                .attr("cy", d => yL(d.price));
+        }
+
+        // Double-click reset
+        svgL.on("dblclick", resetZoom);
+        d3.select("#zoomResetBtn").on("click", resetZoom);
     }
 
 
@@ -271,7 +376,7 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
 
 
-// for Play Animation Button
+// Play Animation Button
     d3.select("#playBtn").on("click", () => {
         let yearList = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b);
         let i = 0;
@@ -299,6 +404,65 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
         themeBtn.textContent = isDark ? "️ Light Mode "  : " Dark Mode ";
     });
 
+//STORY MODE:
 
+    d3.select("#storyBtn").on("click", async () => {
+        const keyEvents = [
+            {year: 2008, note: "Global Financial Crisis — oil price spike"},
+            {year: 2020, note: "COVID-19 Pandemic — demand collapse"},
+            {year: 2022, note: "Post-pandemic rebound & inflation pressures"}
+        ];
+
+        for (const ev of keyEvents) {
+            currentYear = ev.year;
+            d3.select("#yearSlider").property("value", currentYear);
+            d3.select("#yearLabel").text(`Up to ${currentYear}`);
+
+            updateHeatmap();
+            drawLineChart(ev.year);
+
+            await new Promise(r => setTimeout(r, 600));
+
+            document.querySelector("#linechart").scrollIntoView({
+                behavior: "smooth",
+                block: "start"
+            });
+
+            await new Promise(r => setTimeout(r, 600));
+            const chartSvg = d3.select("#linechart svg");
+            if (chartSvg.empty()) continue;
+
+            const noteGroup = chartSvg.append("g")
+                .attr("transform", `translate(${width - 320}, 20)`);
+
+            noteGroup.append("rect")
+                .attr("width", 300)
+                .attr("height", 26)
+                .attr("fill", "rgba(0,0,0,0.6)")
+                .attr("rx", 6)
+                .attr("opacity", 0)
+                .transition().duration(300).attr("opacity", 1);
+
+            noteGroup.append("text")
+                .attr("x", 10).attr("y", 17)
+                .attr("fill", "white")
+                .attr("font-size", "13px")
+                .attr("font-weight", "600")
+                .attr("opacity", 0)
+                .text(ev.note)
+                .transition().duration(400).attr("opacity", 1);
+
+            await new Promise(r => setTimeout(r, 3000));
+
+            noteGroup.transition().duration(400).attr("opacity", 0).remove();
+        }
+    });
+
+    d3.selectAll("#storyNav button").on("click", e => {
+        const y = +e.target.dataset.year;
+        currentYear = y;
+        updateHeatmap(); drawLineChart(y);
+        d3.select("#yearSlider").property("value", y);
+    });
 
 });
