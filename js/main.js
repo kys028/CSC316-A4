@@ -398,14 +398,23 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
         updateHeatmap();
     });
 
+    // reset button
     d3.select("#resetBtn").on("click", () => {
-        currentFuel = fuels[0];
-        currentGrade = grades[0];
+        if (playInterval) clearInterval(playInterval);
+        playInterval = null;
+        isPlaying = false;
+        d3.select("#playBtn").text("▶ Play Timeline");
+
+        currentFuel = "gasoline";
+        currentGrade = "all";
         currentYear = 2025;
+
         d3.select("#fuelSelect").property("value", currentFuel);
+        updateGradeDropdown(currentFuel);
         d3.select("#gradeSelect").property("value", currentGrade);
-        d3.select("#yearSlider").property("value", 2025);
-        d3.select("#yearLabel").text("Up to 2025");
+        d3.select("#yearSlider").property("value", currentYear);
+        d3.select("#yearLabel").text(`Up to ${currentYear}`);
+
         updateHeatmap();
         d3.select("#linechart").html("");
     });

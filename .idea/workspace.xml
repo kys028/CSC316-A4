@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated version of our design">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated timeline, divide choice of type and grade performance.">
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -91,7 +90,7 @@
       <workItem from="1761610005587" duration="6472000" />
       <workItem from="1762196677360" duration="120000" />
       <workItem from="1762305171734" duration="1817000" />
-      <workItem from="1762320545427" duration="17008000" />
+      <workItem from="1762320545427" duration="17328000" />
     </task>
     <task id="LOCAL-00001" summary="error fixed version1">
       <option name="closed" value="true" />
@@ -133,7 +132,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762392311251</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="updated timeline, divide choice of type and grade performance.">
+      <option name="closed" value="true" />
+      <created>1762398580711</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1762398580712</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -143,6 +150,7 @@
     <MESSAGE value="error fixed version1" />
     <MESSAGE value="git test" />
     <MESSAGE value="updated version of our design" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated version of our design" />
+    <MESSAGE value="updated timeline, divide choice of type and grade performance." />
+    <option name="LAST_COMMIT_MESSAGE" value="updated timeline, divide choice of type and grade performance." />
   </component>
 </project>
