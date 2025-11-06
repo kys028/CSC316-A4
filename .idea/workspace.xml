@@ -4,7 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated timeline, divide choice of type and grade performance.">
+    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated reset button (everthing be default( Gasoline ,all)">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -90,7 +93,7 @@
       <workItem from="1761610005587" duration="6472000" />
       <workItem from="1762196677360" duration="120000" />
       <workItem from="1762305171734" duration="1817000" />
-      <workItem from="1762320545427" duration="17328000" />
+      <workItem from="1762320545427" duration="18325000" />
     </task>
     <task id="LOCAL-00001" summary="error fixed version1">
       <option name="closed" value="true" />
@@ -140,7 +143,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762398580712</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="updated reset button (everthing be default( Gasoline ,all)">
+      <option name="closed" value="true" />
+      <created>1762398802611</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1762398802611</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,6 +162,7 @@
     <MESSAGE value="git test" />
     <MESSAGE value="updated version of our design" />
     <MESSAGE value="updated timeline, divide choice of type and grade performance." />
-    <option name="LAST_COMMIT_MESSAGE" value="updated timeline, divide choice of type and grade performance." />
+    <MESSAGE value="updated reset button (everthing be default( Gasoline ,all)" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated reset button (everthing be default( Gasoline ,all)" />
   </component>
 </project>

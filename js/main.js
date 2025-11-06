@@ -326,6 +326,16 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             })
             .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0));
 
+        const insightBox = d3.select("#linechart")
+            .append("div")
+            .attr("class", "insight-box")
+            .html(`<h3>Insight ${selectedYear}</h3>
+         <p>Average price was <b>$${avg.toFixed(2)}</b>.
+         ${change >= 0 ? "Prices increased" : "Prices decreased"} by
+         <b>${change.toFixed(2)}</b> over the year,
+         showing ${vol > 0.1 ? "high" : "low"} volatility.</p>`);
+
+
         //zooming brush
         const brush = d3.brushX()
             .extent([[0, 0], [width, 200]])

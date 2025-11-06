@@ -1,3 +1,33 @@
+.hero {
+    background: linear-gradient(135deg, #007acc 0%, #00c6ff 100%);
+    color: white;
+    text-align: center;
+    padding: 60px 20px 50px;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    animation: fadeIn 1.2s ease-out;
+}
+
+.hero h1 {
+    color: white;
+    font-size: 2.2rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.3em;
+}
+
+.hero .subtitle {
+    color: #f0f4f8;
+    font-size: 1.1rem;
+    max-width: 750px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 body {
     font-family: "Inter", "Segoe UI", Roboto, sans-serif;
     background: #f9fafb;
@@ -220,6 +250,17 @@ body.dark {
     --accent: #4dabf7;
 }
 
+.insight-box {
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+    padding: 12px 16px;
+    margin-top: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+    animation: fadeIn 0.8s ease-in;
+}
 
 
 
