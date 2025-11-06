@@ -14,33 +14,75 @@ const tooltip = d3.select("body").append("div")
     .style("opacity", 0);
 
 d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
+    let playInterval = null;
+    let isPlaying = false;
+
     data.forEach(d => {
         d.date = new Date(d.date);
         d.year = d.date.getFullYear();
         d.week = +d3.timeFormat("%U")(d.date);
-    });
 
-    const fuels  = Array.from(new Set(data.map(d => d.fuel))).sort();
-    const grades = Array.from(new Set(data.map(d => d.grade))).sort();
-    const years  = Array.from(new Set(data.map(d => d.year))).sort((a,b)=>a-b);
+        d.fuel = d.fuel.trim().toLowerCase();
+        d.grade = d.grade.trim().toLowerCase().replaceAll(" ", "_");
+    });
+//dropdown:
+    const years = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b);
+
+    const gradeOptions = {
+        gasoline: ["all", "regular", "midgrade", "premium"],
+        diesel: ["all", "ultra_low_sulfur", "low_sulfur"]
+    };
+
+    const fuels = Object.keys(gradeOptions);
+    let currentFuel = fuels[0];
+    let currentGrade = gradeOptions[currentFuel][0];
+    let currentYear = 2025;
 
     d3.select("#fuelSelect")
         .selectAll("option")
         .data(fuels)
         .join("option")
         .attr("value", d => d)
-        .text(d => d);
+        .text(d => d.charAt(0).toUpperCase() + d.slice(1));
 
-    d3.select("#gradeSelect")
-        .selectAll("option")
-        .data(grades)
-        .join("option")
-        .attr("value", d => d)
-        .text(d => d);
+    updateGradeDropdown(currentFuel);
 
-    let currentFuel = fuels[0],
-        currentGrade = grades[0],
-        currentYear = 2025;
+    function updateGradeDropdown(fuel) {
+        const grades = gradeOptions[fuel];
+        const gradeSelect = d3.select("#gradeSelect");
+        gradeSelect.selectAll("option")
+            .data(grades)
+            .join("option")
+            .attr("value", d => d)
+            .text(d =>
+                d
+                    .replaceAll("_", " ")
+                    .replace(/\b\w/g, l => l.toUpperCase())
+            );
+        currentGrade = grades[0];
+        gradeSelect.property("value", currentGrade);
+    }
+
+//listener:
+    d3.select("#fuelSelect").on("change", e => {
+        currentFuel = e.target.value;
+        if (playInterval) clearInterval(playInterval);
+        playInterval = null;
+        isPlaying = false;
+        playBtn.text("▶ Play Timeline");
+        updateGradeDropdown(currentFuel);
+        updateHeatmap();
+    });
+
+    d3.select("#gradeSelect").on("change", e => {
+        currentGrade = e.target.value;
+        if (playInterval) clearInterval(playInterval);
+        playInterval = null;
+        isPlaying = false;
+        playBtn.text("▶ Play Timeline");
+        updateHeatmap();
+    });
+
 
     const x = d3.scaleBand().domain(d3.range(1,53)).range([0, width]).padding(0.05);
     const y = d3.scaleBand().domain(years).range([0, height]).padding(0.05);
@@ -77,17 +119,22 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
     // Draw Heatmap
     function updateHeatmap() {
-        const subset = data.filter(d =>
-            d.fuel === currentFuel &&
-            d.grade === currentGrade &&
-            d.year <= currentYear
-        );
+        const subset = data.filter(d => {
+            if (d.fuel !== currentFuel) return false;
 
-        color.domain(d3.extent(subset, d => d.price));
+            if (currentGrade === "all") return true;
+            if (currentFuel === "diesel") {
+                return d.grade === currentGrade;
+            }
+            return d.grade === currentGrade;
+        });
+
+        const visible = subset.filter(d => d.year <= currentYear);
+
+        color.domain(d3.extent(visible, d => d.price));
 
         const rects = svg.selectAll("rect")
-            .data(subset, d => `${d.year}-${d.week}`);
-
+            .data(visible, d => `${d.year}-${d.week}`);
 
         rects.join(
             enter => enter.append("rect")
@@ -344,15 +391,6 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
 
     // Listeners
-    d3.select("#fuelSelect").on("change", e => {
-        currentFuel = e.target.value;
-        updateHeatmap();
-    });
-
-    d3.select("#gradeSelect").on("change", e => {
-        currentGrade = e.target.value;
-        updateHeatmap();
-    });
 
     d3.select("#yearSlider").on("input", e => {
         currentYear = +e.target.value;
@@ -376,23 +414,55 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
 
 
-// Play Animation Button
-    d3.select("#playBtn").on("click", () => {
-        let yearList = Array.from(new Set(data.map(d => d.year))).sort((a, b) => a - b);
-        let i = 0;
-        const playInterval = setInterval(() => {
-            if (i >= yearList.length) {
+    // PLAY / PAUSE TIMELINE
+    const playBtn = d3.select("#playBtn");
+
+    playBtn.on("click", () => {
+        if (isPlaying) {
+            clearInterval(playInterval);
+            playInterval = null;
+            isPlaying = false;
+            playBtn.text("▶ Play Timeline");
+            return;
+        }
+
+        const yearList = Array.from(
+            new Set(
+                data
+                    .filter(d =>
+                        d.fuel === currentFuel &&
+                        (currentGrade === "all" || d.grade === currentGrade)
+                    )
+                    .map(d => d.year)
+            )
+        ).sort((a, b) => a - b);
+
+        if (yearList.length === 0) return;
+
+        let currentIndex = yearList.indexOf(currentYear);
+        if (currentIndex === -1) currentIndex = 0;
+
+        isPlaying = true;
+        playBtn.text("⏸ Pause Timeline");
+
+        playInterval = setInterval(() => {
+            if (currentIndex >= yearList.length) {
                 clearInterval(playInterval);
+                playInterval = null;
+                isPlaying = false;
+                playBtn.text("▶ Play Timeline");
                 return;
             }
-            currentYear = yearList[i];
+
+            currentYear = yearList[currentIndex];
             d3.select("#yearSlider").property("value", currentYear);
             d3.select("#yearLabel").text(`Up to ${currentYear}`);
             updateHeatmap();
-
-            i++;
-        }, 300);
+            currentIndex++;
+        }, 350);
     });
+
+
 
 
 
