@@ -240,7 +240,6 @@ footer a:hover {
 }
 .theme-btn:hover { background: #005ea8; }
 
-/* Dark theme variables */
 body.dark {
     --bg: #0b1119;
     --panel-bg: #141c27;

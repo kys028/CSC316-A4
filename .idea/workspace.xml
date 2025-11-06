@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated reset button (everthing be default( Gasoline ,all)">
+    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="title form updated + a insight box below the line chart to give more explanation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
@@ -93,7 +93,7 @@
       <workItem from="1761610005587" duration="6472000" />
       <workItem from="1762196677360" duration="120000" />
       <workItem from="1762305171734" duration="1817000" />
-      <workItem from="1762320545427" duration="18325000" />
+      <workItem from="1762320545427" duration="19262000" />
     </task>
     <task id="LOCAL-00001" summary="error fixed version1">
       <option name="closed" value="true" />
@@ -151,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1762398802611</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="title form updated + a insight box below the line chart to give more explanation">
+      <option name="closed" value="true" />
+      <created>1762399835256</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1762399835256</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -163,6 +171,7 @@
     <MESSAGE value="updated version of our design" />
     <MESSAGE value="updated timeline, divide choice of type and grade performance." />
     <MESSAGE value="updated reset button (everthing be default( Gasoline ,all)" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated reset button (everthing be default( Gasoline ,all)" />
+    <MESSAGE value="title form updated + a insight box below the line chart to give more explanation" />
+    <option name="LAST_COMMIT_MESSAGE" value="title form updated + a insight box below the line chart to give more explanation" />
   </component>
 </project>

@@ -13,6 +13,55 @@ const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
+
+// U.S. map background
+const mapSvg = d3.select("body")
+    .insert("svg", ":first-child") // behind everything else
+    .attr("width", window.innerWidth)
+    .attr("height", window.innerHeight)
+    .style("position", "fixed")
+    .style("top", 0)
+    .style("left", 0)
+    .style("z-index", -1)
+    .style("opacity", 0.2);
+
+const projection = d3.geoAlbersUsa()
+    .translate([window.innerWidth / 2, window.innerHeight / 2])
+    .scale(window.innerWidth * 1.2);
+
+const path = d3.geoPath(projection);
+
+d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
+    const states = topojson.feature(us, us.objects.states);
+    mapSvg.append("g")
+        .selectAll("path")
+        .data(states.features)
+        .join("path")
+        .attr("d", path)
+    const defs = mapSvg.append("defs");
+    const grad = defs.append("linearGradient")
+        .attr("id", "usGradient")
+        .attr("x1", "0%").attr("x2", "100%")
+        .attr("y1", "0%").attr("y2", "100%");
+    grad.append("stop").attr("offset", "0%").attr("stop-color", "#007acc");
+    grad.append("stop").attr("offset", "100%").attr("stop-color", "#00c6ff");
+
+    mapSvg.append("g")
+        .selectAll("path")
+        .data(states.features)
+        .join("path")
+        .attr("d", path)
+        .attr("fill", "url(#usGradient)")
+        .attr("stroke", "#ffffff")
+        .attr("stroke-width", 0.5)
+        .attr("opacity", 0.5);
+
+
+});
+
+
+
+
 d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     let playInterval = null;
     let isPlaying = false;
@@ -334,7 +383,6 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
          ${change >= 0 ? "Prices increased" : "Prices decreased"} by
          <b>${change.toFixed(2)}</b> over the year,
          showing ${vol > 0.1 ? "high" : "low"} volatility.</p>`);
-
 
         //zooming brush
         const brush = d3.brushX()
