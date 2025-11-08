@@ -16,7 +16,7 @@ const tooltip = d3.select("body").append("div")
 
 // U.S. map background
 const mapSvg = d3.select("body")
-    .insert("svg", ":first-child") // behind everything else
+    .insert("svg", ":first-child")
     .attr("width", window.innerWidth)
     .attr("height", window.innerHeight)
     .style("position", "fixed")
@@ -164,6 +164,14 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
         .attr("font-weight", "600")
         .text("Year");
 
+    svg.append("text")
+        .attr("x", width / 2)
+        .attr("y", -10)
+        .attr("text-anchor", "middle")
+        .attr("fill", "#007acc")
+        .attr("font-size", "16px")
+        .attr("font-weight", "700")
+        .text("Weekly U.S. Gas Prices (Heatmap)");
 
 
     // Draw Heatmap
@@ -236,27 +244,54 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
     // Legend
     function drawLegend() {
-        const legendSvg = d3.select("#legend").html("").append("svg")
+        const legendWidth = 200;
+        const legendHeight = 15;
+
+        const legendSvg = d3.select("#legend")
+            .html("")
+            .append("svg")
             .attr("width", 280)
-            .attr("height", 40);
+            .attr("height", 80);  // more vertical space
+
+        // Gradient definition
         const defs = legendSvg.append("defs");
         const grad = defs.append("linearGradient").attr("id", "grad");
         grad.selectAll("stop")
-            .data(d3.ticks(0,1,10))
+            .data(d3.ticks(0, 1, 10))
             .join("stop")
             .attr("offset", d => d)
-            .attr("stop-color", d => color(color.domain()[0] + d * (color.domain()[1]-color.domain()[0])));
+            .attr("stop-color", d => color(color.domain()[0] + d * (color.domain()[1] - color.domain()[0])));
+
+        //legend
+        legendSvg.append("text")
+            .attr("x", 110)
+            .attr("y", 18)
+            .attr("text-anchor", "middle")
+            .attr("fill", "#007acc")
+            .attr("font-size", "13px")
+            .attr("font-weight", "700")
+            .text("Price Density");
 
         legendSvg.append("rect")
-            .attr("width", 200).attr("height", 15)
-            .attr("x", 10).attr("y", 10)
-            .style("fill", "url(#grad)");
+            .attr("width", legendWidth)
+            .attr("height", legendHeight)
+            .attr("x", 10)
+            .attr("y", 30)
+            .style("fill", "url(#grad)")
+            .style("stroke", "#333")
+            .style("stroke-width", 0.5);
 
-        const scale = d3.scaleLinear().domain(color.domain()).range([10,210]);
+        const scale = d3.scaleLinear()
+            .domain(color.domain())
+            .range([10, 10 + legendWidth]);
+
         legendSvg.append("g")
-            .attr("transform", "translate(0,28)")
-            .call(d3.axisBottom(scale).ticks(5).tickSize(0));
+            .attr("transform", "translate(0,55)")
+            .call(d3.axisBottom(scale).ticks(6).tickSize(0))
+            .selectAll("text")
+            .style("font-size", "11px");
     }
+
 
 
 
