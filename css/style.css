@@ -388,3 +388,46 @@ body.dark .info-panel h3 {
 body.dark #timelineBar { background: #222; }
 body.dark #timelineProgress { background: linear-gradient(90deg, #4dabf7, #63e6be); }
 body.dark #timelineMarker { background: #63e6be; }
+
+/* === Story Milestone Buttons === */
+#storyNav {
+    display: flex;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 16px;
+    margin-bottom: 20px;
+}
+
+#storyNav button {
+    background: linear-gradient(135deg, #007acc, #00c6ff);
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 26px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 122, 204, 0.4);
+    transition: all 0.25s ease;
+}
+
+#storyNav button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 198, 255, 0.5);
+    background: linear-gradient(135deg, #00c6ff, #007acc);
+}
+
+#storyNav button:active {
+    transform: scale(0.97);
+}
+
+body.dark #storyNav button {
+    background: linear-gradient(135deg, #4dabf7, #63e6be);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(99, 230, 190, 0.4);
+}
+body.dark #storyNav button:hover {
+    background: linear-gradient(135deg, #63e6be, #4dabf7);
+    box-shadow: 0 6px 20px rgba(99, 230, 190, 0.6);
+}

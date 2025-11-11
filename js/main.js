@@ -534,7 +534,7 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     d3.select("#yearSlider").on("input", e => {
         currentYear = +e.target.value;
         d3.select("#yearLabel").text(`Up to ${currentYear}`);
-        // --- Create timeline progress bar ---
+        // timeline progress bar
         const timelineBar = d3.select("#timelineBar");
         timelineBar.html(""); // clear if reloaded
 
