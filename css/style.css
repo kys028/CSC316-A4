@@ -358,28 +358,33 @@ body.dark .info-panel h3 {
     color: #63e6be;
 }
 /* Timeline Bar */
-#timelineProgressContainer {
+#timelineBar {
     width: 100%;
-    max-width: 600px;
     height: 8px;
-    background: rgba(0,0,0,0.1);
-    border-radius: 5px;
+    background: #e0e0e0;
+    border-radius: 6px;
+    margin-top: 8px;
+    position: relative;
+    cursor: pointer;
     overflow: hidden;
-    margin: 8px auto 0 auto;
-    box-shadow: inset 0 1px 4px rgba(0,0,0,0.1);
-    transition: opacity 0.3s ease;
 }
-
-#timelineProgressBar {
+#timelineProgress {
     height: 100%;
-    width: 0%;
     background: linear-gradient(90deg, #007acc, #00c6ff);
-    border-radius: 5px;
-    transition: width 0.35s ease;
+    width: 0%;
+    border-radius: 6px;
+    transition: width 0.2s linear;
 }
-body.dark #timelineProgressContainer {
-    background: rgba(255,255,255,0.15);
+#timelineMarker {
+    position: absolute;
+    top: -4px;
+    width: 10px;
+    height: 16px;
+    background: #007acc;
+    border-radius: 2px;
+    transform: translateX(-5px);
+    transition: left 0.2s linear;
 }
-
-
-
+body.dark #timelineBar { background: #222; }
+body.dark #timelineProgress { background: linear-gradient(90deg, #4dabf7, #63e6be); }
+body.dark #timelineMarker { background: #63e6be; }

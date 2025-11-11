@@ -472,7 +472,7 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
                 if (!selection) return;
                 const [x0, x1] = selection.map(xL.invert);
                 zoomToPeriod(x0, x1);
-                svgL.select(".brush").call(brush.move, null); // clear brush
+                svgL.select(".brush").call(brush.move, null);
             });
 
         svgL.append("g").attr("class", "brush").call(brush);
@@ -534,7 +534,33 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     d3.select("#yearSlider").on("input", e => {
         currentYear = +e.target.value;
         d3.select("#yearLabel").text(`Up to ${currentYear}`);
+        // --- Create timeline progress bar ---
+        const timelineBar = d3.select("#timelineBar");
+        timelineBar.html(""); // clear if reloaded
+
+        timelineBar
+            .append("div")
+            .attr("id", "timelineProgress");
+
+        timelineBar
+            .append("div")
+            .attr("id", "timelineMarker");
+
+        timelineBar.on("click", function(event) {
+            const rect = this.getBoundingClientRect();
+            const percent = (event.clientX - rect.left) / rect.width;
+            const newYear = Math.round(1990 + percent * (2025 - 1990));
+            currentYear = Math.min(Math.max(newYear, 1990), 2025);
+            d3.select("#yearSlider").property("value", currentYear);
+            d3.select("#yearLabel").text(`Up to ${currentYear}`);
+            updateHeatmap();
+        });
+
         updateHeatmap();
+        const progressPercent = ((currentYear - 1990) / (2025 - 1990)) * 100;
+        d3.select("#timelineProgress").style("width", progressPercent + "%");
+        d3.select("#timelineMarker").style("left", progressPercent + "%");
+
     });
 
     // reset button
@@ -606,6 +632,11 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
             d3.select("#yearSlider").property("value", currentYear);
             d3.select("#yearLabel").text(`Up to ${currentYear}`);
             updateHeatmap();
+
+            const progressPercent = ((currentYear - 1990) / (2025 - 1990)) * 100;
+            d3.select("#timelineProgress").style("width", progressPercent + "%");
+            d3.select("#timelineMarker").style("left", progressPercent + "%");
+
             currentIndex++;
         }, 350);
     });
