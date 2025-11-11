@@ -137,6 +137,8 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     const x = d3.scaleBand().domain(d3.range(1,53)).range([0, width]).padding(0.05);
     const y = d3.scaleBand().domain(years).range([0, height]).padding(0.05);
     const color = d3.scaleSequential(d3.interpolateYlOrRd);
+    const compareColor = d3.scaleOrdinal(d3.schemeTableau10);
+
 
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
@@ -193,6 +195,29 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
 
         const rects = svg.selectAll("rect")
             .data(visible, d => `${d.year}-${d.week}`);
+//Add brushing interaction on the heatmap
+        svg.selectAll(".heatmap-brush").remove(); // clear previous brush
+
+        const brush = d3.brush()
+            .extent([[0, 0], [width, height]])
+            .on("end", ({selection}) => {
+                if (!selection) return;
+
+                const [[x0, y0], [x1, y1]] = selection;
+                const selectedYears = y.domain().filter(
+                    yr => y(yr) + y.bandwidth() >= y0 && y(yr) <= y1
+                );
+
+                // draw line chart for all selected years
+                drawCompareChart(selectedYears);
+
+                // reset brush
+                svg.select(".heatmap-brush").call(brush.move, null);
+            });
+
+        svg.append("g")
+            .attr("class", "heatmap-brush")
+            .call(brush);
 
         rects.join(
             enter => enter.append("rect")
@@ -527,6 +552,82 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     }
 
 
+    function drawCompareChart(yearList) {
+        const filtered = data.filter(d =>
+            d.fuel === currentFuel &&
+            (currentGrade === "all" || d.grade === currentGrade) &&
+            yearList.includes(d.year)
+        );
+
+        const nested = d3.group(filtered, d => d.year);
+
+        d3.select("#linechart").html("");
+
+        const svgL = d3.select("#linechart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", 300)
+            .append("g")
+            .attr("transform", `translate(${margin.left},50)`);
+
+        const allWeeks = d3.extent(filtered, d => d.date);
+        const allPrices = d3.extent(filtered, d => d.price);
+
+        const xL = d3.scaleTime().domain(allWeeks).range([0, width]);
+        const yL = d3.scaleLinear().domain(allPrices).nice().range([200, 0]);
+
+        const xAxis = svgL.append("g")
+            .attr("transform", "translate(0,200)")
+            .call(d3.axisBottom(xL).ticks(6));
+        svgL.append("g").call(d3.axisLeft(yL));
+
+        const line = d3.line()
+            .x(d => xL(d.date))
+            .y(d => yL(d.price));
+
+        for (const [yr, values] of nested) {
+            const weekAgg = Array.from(
+                d3.rollup(values, v => d3.mean(v, d => d.price), d => d3.timeWeek.floor(d.date)),
+                ([date, price]) => ({ date, price })
+            ).sort((a, b) => d3.ascending(a.date, b.date));
+
+            svgL.append("path")
+                .datum(weekAgg)
+                .attr("fill", "none")
+                .attr("stroke", compareColor(yr))
+                .attr("stroke-width", 2)
+                .attr("d", line)
+                .append("title").text(`${yr}`);
+        }
+        svgL.selectAll("path")
+            .attr("stroke-dasharray", function() {
+                const len = this.getTotalLength();
+                return len + " " + len;
+            })
+            .attr("stroke-dashoffset", function() {
+                return this.getTotalLength();
+            })
+            .transition()
+            .duration(1000)
+            .ease(d3.easeLinear)
+            .attr("stroke-dashoffset", 0);
+
+
+        const legend = svgL.selectAll(".legend")
+            .data(yearList)
+            .join("g")
+            .attr("class", "legend")
+            .attr("transform", (d, i) => `translate(${i * 100}, -20)`);
+
+        legend.append("rect")
+            .attr("width", 12).attr("height", 12)
+            .attr("fill", d => compareColor(d));
+        legend.append("text")
+            .attr("x", 18).attr("y", 10)
+            .text(d => d)
+            .style("font-size", "12px");
+
+    }
 
 
     // Listeners

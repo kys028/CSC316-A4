@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated legend and label">
+    <list default="true" id="53065db1-bc2f-4e80-81cf-a1cb1fcf4a4c" name="Changes" comment="updated milestone button">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +94,7 @@
       <workItem from="1762478372867" duration="680000" />
       <workItem from="1762552680470" duration="597000" />
       <workItem from="1762560777677" duration="1078000" />
-      <workItem from="1762837407249" duration="2007000" />
+      <workItem from="1762837407249" duration="3175000" />
     </task>
     <task id="LOCAL-00001" summary="error fixed version1">
       <option name="closed" value="true" />
@@ -195,7 +192,23 @@
       <option name="project" value="LOCAL" />
       <updated>1762838657949</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="updated time line">
+      <option name="closed" value="true" />
+      <created>1762839675790</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1762839675790</updated>
+    </task>
+    <task id="LOCAL-00014" summary="updated milestone button">
+      <option name="closed" value="true" />
+      <created>1762839993614</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1762839993614</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -211,6 +224,8 @@
     <MESSAGE value="US map as web background" />
     <MESSAGE value="uodated hover information panel" />
     <MESSAGE value="updated legend and label" />
-    <option name="LAST_COMMIT_MESSAGE" value="updated legend and label" />
+    <MESSAGE value="updated time line" />
+    <MESSAGE value="updated milestone button" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated milestone button" />
   </component>
 </project>
