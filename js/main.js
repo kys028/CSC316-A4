@@ -64,6 +64,7 @@ d3.json("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json").then(us => {
 
 d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
     let playInterval = null;
+    let lastHovered = null;
     let isPlaying = false;
 
     data.forEach(d => {
@@ -216,11 +217,24 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
                         .transition().duration(150)
                         .attr("stroke", "#000")
                         .attr("stroke-width", 1.5);
+                    d3.selectAll("#linechart circle")
+                        .attr("stroke", circle =>
+                            circle.date.getFullYear() === d.year &&
+                            d3.timeFormat("%U")(circle.date) == d.week ? "#00c6ff" : null
+                        )
+                        .attr("stroke-width", circle =>
+                            circle.date.getFullYear() === d.year &&
+                            d3.timeFormat("%U")(circle.date) == d.week ? 3 : 0
+                        );
                 })
                 .on("mouseout", (event) => {
                     d3.select(event.currentTarget)
                         .transition().duration(200)
                         .attr("stroke-width", 0);
+
+                    d3.selectAll("#heatmap rect, #linechart circle")
+                        .attr("stroke-width", 0)
+                        .attr("stroke", null);
                 })
 
     .on("click", (_, d) => {
@@ -422,9 +436,26 @@ d3.csv("data/weekly_gas_prices.csv", d3.autoType).then(data => {
                 tooltip.html(`${d3.timeFormat("%b %d")(d.date)}<br>$${d.price.toFixed(2)}`)
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 28) + "px");
-            })
-            .on("mouseout", () => tooltip.transition().duration(200).style("opacity", 0));
+                const hoverYear = d.date.getFullYear();
+                const hoverWeek = +d3.timeFormat("%U")(d.date);
 
+                d3.select("#heatmap").selectAll("rect")
+                    .attr("stroke", cell =>
+                        cell.year === hoverYear && cell.week === hoverWeek ? "#00c6ff" : null
+                    )
+                    .attr("stroke-width", cell =>
+                        cell.year === hoverYear && cell.week === hoverWeek ? 2 : 0
+                    );
+
+
+            })
+            .on("mouseout", () => {
+                tooltip.transition().duration(200).style("opacity", 0);
+
+                d3.selectAll("#heatmap rect, #linechart circle")
+                    .attr("stroke-width", 0)
+                    .attr("stroke", null);
+            });
         const insightBox = d3.select("#linechart")
             .append("div")
             .attr("class", "insight-box")
